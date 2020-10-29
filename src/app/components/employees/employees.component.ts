@@ -15,21 +15,38 @@ export class EmployeesComponent implements OnInit {
   /**
    * Employee
    */
-  employees: EmployeeInterface;
+  employees: EmployeeInterface[];
+
+  /**
+   * Pagination variables
+   */
+  page = 1;
+  pageSize = 10;
+  collectionSize;
 
   /**
    * @param employeeService
    */
-  constructor(private employeeService: EmployeesService) {}
+  constructor(private employeeService: EmployeesService) { }
 
   ngOnInit(): void {
     this.fetchEmployees();
   }
 
   fetchEmployees = () => {
-    this.employeeService.getAllEmployees()
-    .then( res => {
+    this.employeeService.getAllEmployees().then((res) => {
       this.employees = res;
+      this.collectionSize = this.employees.length;
+      this.refreshEmployees()
     });
+  };
+
+  refreshEmployees = () => {
+    this.employees = this.employees
+      .map((employee, index) => ({ id: index + 1, ...employee }))
+      .slice(
+        (this.page - 1) * this.pageSize,
+        (this.page - 1) * this.pageSize + this.pageSize
+      );
   };
 }

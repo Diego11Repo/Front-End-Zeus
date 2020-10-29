@@ -1,16 +1,41 @@
-<table
-  class="table table-bordered"
->
-  <tr class="table-primary">
-    <th>#</th>
-    <th>Name</th>
-    <th>Last Name</th>
-    <th>Birthday</th>
-  </tr>
-  <tr *ngFor="let employee of employees">
-    <th>{{ employee.id }}</th>
-    <th>{{ employee.name }}</th>
-    <th>{{ employee.last_name }}</th>
-    <th>{{ employee.birthday }}</th>
-  </tr>
-</table>
+<div class="table-container">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr class="table-primary">
+        <th>#</th>
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Birthday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees">
+        <th scope="row">{{ employee.id }}</th>
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.last_name }}</td>
+        <td>{{ employee.birthday }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="fetchEmployees()"
+    >
+    </ngb-pagination>
+
+    <select
+      class="custom-select"
+      style="width: auto"
+      [(ngModel)]="pageSize"
+      (ngModelChange)="fetchEmployees()"
+    >
+      <option [ngValue]="6">6 items per page</option>
+      <option [ngValue]="8">8 items per page</option>
+      <option [ngValue]="10">10 items per page</option>
+    </select>
+  </div>
+</div>
