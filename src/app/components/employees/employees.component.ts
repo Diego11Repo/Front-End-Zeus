@@ -1,6 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { EmployeeInterface } from "src/app/interfaces/employee.interface";
+import { DecimalPipe } from '@angular/common';
+import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { Observable } from 'rxjs';
+import { NgbdSortableHeader, SortEvent } from 'src/app/directives/sortable.directive';
 
+import { EmployeeInterface } from "../../interfaces/employee.interface";
 import { EmployeesService } from "../../services/employees.service";
 
 /**
@@ -10,43 +13,35 @@ import { EmployeesService } from "../../services/employees.service";
   selector: "app-employees",
   templateUrl: "./employees.component.html",
   styleUrls: ["./employees.component.scss"],
+  providers: [EmployeesService, DecimalPipe]
 })
 export class EmployeesComponent implements OnInit {
   /**
    * Employee
    */
-  employees: EmployeeInterface[];
+  employees$: Observable<EmployeeInterface[]>;
+  total$: Observable<number>;
 
-  /**
-   * Pagination variables
-   */
-  page = 1;
-  pageSize = 10;
-  collectionSize;
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
   /**
    * @param employeeService
    */
-  constructor(private employeeService: EmployeesService) { }
-
-  ngOnInit(): void {
-    this.fetchEmployees();
+  constructor(public service: EmployeesService) { 
+    this.employees$ = service.employees$;
+    this.total$ = service.total$;
   }
 
-  fetchEmployees = () => {
-    this.employeeService.getAllEmployees().then((res) => {
-      this.employees = res;
-      this.collectionSize = this.employees.length;
-      this.refreshEmployees()
+  onSort({column, direction}: SortEvent) {
+    this.headers.forEach( header => {
+      if(header.sortable !== column) {
+        header.direction = ''
+      }
     });
-  };
 
-  refreshEmployees = () => {
-    this.employees = this.employees
-      .map((employee, index) => ({ id: index + 1, ...employee }))
-      .slice(
-        (this.page - 1) * this.pageSize,
-        (this.page - 1) * this.pageSize + this.pageSize
-      );
-  };
+    this.service.sortColumn = column;
+    this.service.sortDirection = direction;
+  }
+
+  ngOnInit(): void {}
 }
