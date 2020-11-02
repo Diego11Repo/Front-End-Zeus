@@ -1,7 +1,10 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe } from "@angular/common";
 import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
-import { Observable } from 'rxjs';
-import { NgbdSortableHeader, SortEvent } from 'src/app/directives/sortable.directive';
+import { Observable } from "rxjs";
+import {
+  NgbdSortableHeader,
+  SortEvent,
+} from "src/app/directives/sortable.directive";
 
 import { EmployeeInterface } from "../../interfaces/employee.interface";
 import { EmployeesService } from "../../services/employees.service";
@@ -13,7 +16,7 @@ import { EmployeesService } from "../../services/employees.service";
   selector: "app-employees",
   templateUrl: "./employees.component.html",
   styleUrls: ["./employees.component.scss"],
-  providers: [EmployeesService, DecimalPipe]
+  providers: [EmployeesService, DecimalPipe],
 })
 export class EmployeesComponent implements OnInit {
   /**
@@ -22,20 +25,30 @@ export class EmployeesComponent implements OnInit {
   employees$: Observable<EmployeeInterface[]>;
   total$: Observable<number>;
 
+  /**
+   * Input Values
+   */
+  newEmployee: EmployeeInterface;
+
+  /**
+   * Validation Button
+   */
+  validationButton: boolean;
+
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
   /**
    * @param employeeService
    */
-  constructor(public service: EmployeesService) { 
+  constructor(public service: EmployeesService) {
     this.employees$ = service.employees$;
     this.total$ = service.total$;
   }
 
-  onSort({column, direction}: SortEvent) {
-    this.headers.forEach( header => {
-      if(header.sortable !== column) {
-        header.direction = ''
+  onSort({ column, direction }: SortEvent) {
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = "";
       }
     });
 
@@ -43,5 +56,25 @@ export class EmployeesComponent implements OnInit {
     this.service.sortDirection = direction;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.service.getAllEmployees();
+    console.log(this.employees$)
+  }
+
+  handleSubmit = () => {
+
+    const inputName = (<HTMLInputElement>document.querySelector("#inputName")).value;
+    const inputLastName = (<HTMLInputElement>document.querySelector("#inputLastName")).value;
+    const inputBirthday = Number((<HTMLInputElement>document.querySelector("#inputBirthday")).value);
+    
+    this.newEmployee = {
+      id: '',
+      name: inputName,
+      last_name: inputLastName,
+      birthday: inputBirthday
+    };
+    this.service.createNewEmployee(this.newEmployee)
+    .subscribe(employee => {
+    })
+  };
 }

@@ -31,7 +31,7 @@
           <td>
             <ngb-highlight
               [result]="employee.last_name"
-              [term]="service.searchTerm"  
+              [term]="service.searchTerm"
             ></ngb-highlight>
           </td>
           <td>
@@ -63,5 +63,27 @@
         <option [ngValue]="10">10 items per page</option>
       </select>
     </div>
+  </form>
+  <form>
+
+    Add New Employee
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" class="form-control" id="inputName" />
+    </div>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text" class="form-control" id="inputLastName" />
+    </div>
+    <div class="form-group">
+      <label>Birthday</label>
+      <input type="text" class="form-control" id="inputBirthday" maxlength="8" placeholder="YYYY/MM/DD"/>
+    </div>
+    <div class="form-group">
+      <label class="validation-form">All fields required !</label>
+    </div>
+    <button type="submit" class="btn btn-primary" (click)="handleSubmit()">
+      Add New Employee
+    </button>
   </form>
 </div>

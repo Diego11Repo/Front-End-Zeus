@@ -38,10 +38,7 @@ function sort(
   }
 }
 
-function matches(
-  employee: EmployeeInterface,
-  term: string,
-) {
+function matches(employee: EmployeeInterface, term: string) {
   return (
     employee.name.toLowerCase().includes(term.toLowerCase()) ||
     employee.last_name.toLowerCase().includes(term.toLowerCase()) ||
@@ -69,7 +66,6 @@ export class EmployeesService {
   };
 
   constructor(private http: HttpClient) {
-    this.getAllEmployees();
     this._search$
       .pipe(
         tap(() => this._loading$.next(true)),
@@ -139,10 +135,9 @@ export class EmployeesService {
     let employees = sort(this.data, sortColumn, sortDirection);
 
     // 2. filter
-    employees = employees.filter(employee => {
+    employees = employees.filter((employee) => {
       return matches(employee, searchTerm);
-    }
-    );
+    });
     const total = employees.length;
 
     // 3. paginate
@@ -156,9 +151,13 @@ export class EmployeesService {
   async getAllEmployees() {
     const res = await this.http
       .get(
-        "https://6edeayi7ch.execute-api.us-east-1.amazonaws.com/v1/examen/employees/donald"
+        "https://6edeayi7ch.execute-api.us-east-1.amazonaws.com/v1/examen/employees/diego"
       )
       .toPromise();
-    return (this.data = res["data"].employees);
+    return this.data = res["data"].employees;
+  }
+
+  createNewEmployee(employee: EmployeeInterface) {
+    return this.http.post("https://6edeayi7ch.execute-api.us-east-1.amazonaws.com/v1/examen/employees/diego", employee);
   }
 }

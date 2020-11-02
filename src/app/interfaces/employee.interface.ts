@@ -20,5 +20,5 @@ export interface EmployeeInterface {
   /**
    * Birthday of employee
    */
-  birthday: string;
+  birthday: number;
 }
