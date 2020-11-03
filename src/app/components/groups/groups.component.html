@@ -1,1 +1,18 @@
-<p>groups works!</p>
+<div class="form-container">
+  <div class="form-group form-inline">
+    Search:
+    <input
+    class="form-control ml-2"
+    type="text"
+    name="searchTerm"
+    placeholder="Search group"
+    />
+  </div>
+  <div class="cards-container">
+    <div *ngFor="let group of groups" class="card" style="width: 13rem;">
+      <div class="card-body">
+        <h5>{{ group.name}}</h5>
+      </div>
+    </div>
+  </div>
+</div>

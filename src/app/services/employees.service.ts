@@ -154,7 +154,13 @@ export class EmployeesService {
         "https://6edeayi7ch.execute-api.us-east-1.amazonaws.com/v1/examen/employees/diego"
       )
       .toPromise();
-    return this.data = res["data"].employees;
+      this.data = res["data"].employees;
+      this.data.map( (employee, index) => {
+        if(employee.birthday === null) {
+          this.data.splice(index, 1)
+        }
+      })
+      return this.data;
   }
 
   createNewEmployee(employee: EmployeeInterface) {

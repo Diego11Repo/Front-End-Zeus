@@ -58,7 +58,6 @@ export class EmployeesComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getAllEmployees();
-    console.log(this.employees$)
   }
 
   handleSubmit = () => {
